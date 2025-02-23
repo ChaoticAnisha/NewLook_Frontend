@@ -1,4 +1,3 @@
-import React from 'react';
 
 const About = () => {
   return (
@@ -16,7 +15,7 @@ const About = () => {
             <h2 className="text-2xl font-semibold mb-4 text-yellow-600">Our Mission</h2>
             <p className="text-gray-700">
               We are dedicated to providing top-quality beauty and relaxation services that boost 
-              our clients' confidence and well-being. Our team of skilled professionals is committed 
+              our clients confidence and well-being. Our team of skilled professionals is committed 
               to delivering personalized experiences that make you look and feel your best.
             </p>
           </div>

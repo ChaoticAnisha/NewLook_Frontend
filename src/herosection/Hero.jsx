@@ -1,4 +1,3 @@
-import React from 'react';
 import priceBg from '/assets/images/hero-banner.jpg'; 
 
 const Hero = () => {

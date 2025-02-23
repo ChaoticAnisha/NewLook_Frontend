@@ -1,4 +1,3 @@
-import React from 'react';
 import { Outlet, createBrowserRouter, RouterProvider, Navigate, useRouteError, useNavigate } from 'react-router-dom';
 import './App.css';
 import NavBar from './navbar/navBar';
@@ -15,6 +14,9 @@ import About from './about/About';
 import Profile from './navbar/Profile';
 import AdminDashboard from './admin/AdminDashboard';
 
+import PropTypes from 'prop-types';
+
+
 function ErrorBoundary() {
   const error = useRouteError();
   
@@ -28,12 +30,9 @@ function ErrorBoundary() {
             : "An unexpected error occurred. Please try again later."}
         </p>
         <div className="flex justify-center">
-          <a
-            href="/"
-            className="bg-amber-500 text-white px-6 py-2 rounded-lg hover:bg-amber-600 transition-colors"
-          >
-            Return Home
-          </a>
+          <Navigate to="/login" replace className="bg-amber-500 text-white px-6 py-2 rounded-lg hover:bg-amber-600 transition-colors">
+            Goto Login
+          </Navigate>
         </div>
       </div>
     </div>
@@ -54,6 +53,13 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
   return children;
 };
+
+ProtectedRoute.propTypes = {
+  children: PropTypes.node.isRequired,
+  allowedRoles: PropTypes.arrayOf(PropTypes.string),
+};
+
+
 
 const MainLayout = () => {
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import mainBg from '/assets/images/main.jpg';
 import { resetPassword } from '../../api'; // Import the resetPassword function
@@ -26,7 +26,7 @@ const Forgot = () => {
       await resetPassword({ username, newPassword }); // Call the resetPassword function
       setSuccess('Password reset successfully');
     } catch (err) {
-      setError('Failed to reset password. Please try again.');
+      setError('Failed to reset password. Please try again.' + err.message);
     } finally {
       setIsLoading(false);
     }

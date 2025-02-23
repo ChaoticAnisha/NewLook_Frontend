@@ -1,6 +1,5 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import PropTypes from 'prop-types';
 const ServiceCard = ({ icon, title, description, filter }) => {
   const navigate = useNavigate();
 
@@ -85,4 +84,10 @@ const Services = () => {
   );
 };
 
+ServiceCard.propTypes = {
+  icon: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  filter: PropTypes.string.isRequired,
+};
 export default Services;

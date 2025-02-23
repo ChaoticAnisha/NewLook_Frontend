@@ -1,6 +1,10 @@
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import PropTypes from "prop-types"
 import { Plus, Edit2, Trash2, Users, Calendar, Settings } from 'lucide-react';
+import StatusDropdown from './components/StatusDropdown.jsx';
+
+
 
 const Sidebar = ({ activeTab, setActiveTab }) => (
   <div className="w-64 bg-gray-800 text-white min-h-screen p-4">
@@ -40,6 +44,11 @@ const Sidebar = ({ activeTab, setActiveTab }) => (
     </div>
   </div>
 );
+Sidebar.propTypes = {
+  activeTab: PropTypes.string.isRequired,
+  setActiveTab: PropTypes.func.isRequired,
+};
+
 
 const ServiceForm = ({ service, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -110,9 +119,17 @@ const ServiceForm = ({ service, onSubmit, onCancel }) => {
     </form>
   );
 };
-
+ServiceForm.propTypes = {
+  service: PropTypes.shape({
+    icon: PropTypes.string,
+    title: PropTypes.string,
+    description: PropTypes.string,
+    filter: PropTypes.string,
+  }),
+  onSubmit: PropTypes.func.isRequired,
+  onCancel: PropTypes.func.isRequired,
+};
 const AdminDashboard = () => {
-  // Initial services data
   const initialServices = [
     {
       icon: "💇‍♂️",
@@ -161,12 +178,12 @@ const AdminDashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+   
   useEffect(() => {
-    const fetchDashboardData = async () => {
+    const fetchAppointments = async () => {
       setIsLoading(true);
-      try {
-        // Fetch appointments
-        const appointmentsResponse = await fetch('http://localhost:5000/api/appointments', {
+     try{
+       const appointmentsResponse = await fetch('http://localhost:5000/api/appointments', {
           method: "GET",
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
@@ -175,8 +192,18 @@ const AdminDashboard = () => {
         const appointmentsData = await appointmentsResponse.json();
         console.log("The appointment data is",appointmentsData)
         setAppointments(appointmentsData);
-
-        // Fetch users
+     }
+    catch(err){
+      setError(err.message);
+      console.error('Error fetching dashboard data:', err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+    const fetchDashboardData = async () => {
+      setIsLoading(true);
+      try {
+  //fetch user
         const usersResponse = await fetch('http://localhost:5000/api/users/admin/users', {
           method: "GET",
           headers: {
@@ -197,6 +224,7 @@ const AdminDashboard = () => {
     };
 
     fetchDashboardData();
+     fetchAppointments();
   }, []);
 
   const handleAddService = (serviceData) => {
@@ -344,29 +372,27 @@ const AdminDashboard = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-           {appointments.length > 0 ? (
-  appointments.map((appointment) => (
-    <tr key={appointment.id}>
-      <td className="px-6 py-4 whitespace-nowrap">{appointment.id}</td>
-      <td className="px-6 py-4 whitespace-nowrap">
-        {new Date(appointment.date).toLocaleDateString("en-GB")}
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap">{appointment.name}</td>
-      <td className="px-6 py-4 whitespace-nowrap">{appointment.email}</td>
-      <td className="px-6 py-4 whitespace-nowrap">{appointment.category}</td>
-      <td className="px-6 py-4 whitespace-nowrap">
-        <button
-          className={`px-2 py-1 rounded-full text-xs font-medium ${
-            appointment.status === 'pending' 
-              ? 'bg-yellow-100 text-yellow-800' 
-              : 'bg-green-100 text-green-800'
-          }`}
-        >
-          {appointment.status}
-        </button>
+              {appointments.length > 0 ? (
+      appointments.map((appointment) => (
+        <tr key={appointment.id}>
+          <td className="px-6 py-4 whitespace-nowrap">{appointment.id}</td>
+          <td className="px-6 py-4 whitespace-nowrap">
+            {new Date(appointment.date).toLocaleDateString("en-GB")}
+          </td>
+          <td className="px-6 py-4 whitespace-nowrap">{appointment.name}</td>
+          <td className="px-6 py-4 whitespace-nowrap">{appointment.email}</td>
+          <td className="px-6 py-4 whitespace-nowrap">{appointment.category}</td>
+          <td className="px-6 py-4 whitespace-nowrap">
+            
+          <StatusDropdown 
+                        appointmentId={appointment.id}
+                        status={appointment.status}
+                        
+            />
       </td>
     </tr>
   ))
@@ -383,7 +409,15 @@ const AdminDashboard = () => {
       </div>
     </div>
   );
-
+{/* <button
+          className={`px-2 py-1 rounded-full text-xs font-medium ${
+            appointment.status === 'pending' 
+              ? 'bg-yellow-100 text-yellow-800' 
+              : 'bg-green-100 text-green-800'
+          }`}
+        >
+          {appointment.status}
+        </button> */}
   const renderUsers = () => (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-gray-800">Users</h2>

@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import mainBg from '/assets/images/main.jpg';
 import { loginUser } from '../../api'; // Import the loginUser function
 
 const Login = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -33,7 +32,7 @@ const Login = () => {
         navigate('/admin/dashboard')
       }
     } catch (err) {
-      setError('Invalid email or password');
+      setError('Invalid email or password',err.message);
     } finally {
       setIsLoading(false);
     }
@@ -122,7 +121,7 @@ const Login = () => {
 
             <div className="mt-6 text-center">
               <p className="text-gray-600">
-                Don't have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <Link to="/signup" className="text-amber-600 hover:text-amber-700 font-medium">
                   Sign up
                 </Link>
