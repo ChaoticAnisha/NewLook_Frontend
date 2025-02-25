@@ -1,6 +1,7 @@
 const API_URL = "http://localhost:5000/api";
 
 export const loginUser = async (credentials) => {
+  console.log("The credentials are", credentials);
   const response = await fetch(`${API_URL}/users/login`, {
     method: "POST",
     headers: {

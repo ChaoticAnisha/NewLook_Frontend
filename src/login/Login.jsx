@@ -20,6 +20,7 @@ const Login = () => {
     setError('');
 
     try {
+      console.log("The form data is", formData);
       const response = await loginUser(formData); // Call the loginUser function
       console.log(response);
 
